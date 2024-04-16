@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Player = ({ initialName, sympol }) => {
+const Player = ({ initialName, sympol, isActive }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(initialName);
   const handleEditClick = () => {
@@ -11,7 +11,7 @@ const Player = ({ initialName, sympol }) => {
   };
   return (
     <>
-      <li>
+      <li className={isActive ? "active" : undefined}>
         <span className="player">
           {isEditing ? (
             <input type="text" value={name} onChange={handleChangeInput} />
