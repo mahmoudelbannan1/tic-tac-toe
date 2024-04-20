@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const GameBoard = ({ onSelectSquare, board }) => {
   return (
     <ol id="game-board">

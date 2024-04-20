@@ -4,7 +4,11 @@ import GameBoard from "./components/GameBoard";
 import Log from "./components/Log";
 import { WINNING_COMBINATIONS } from "./winning-compination";
 import GameOver from "./components/GameOver";
-const initialGameBoard = [
+const PLAYERS = {
+  X: "player 1",
+  O: "player 2",
+};
+const INITIAL_GAME_BOARD = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -18,21 +22,17 @@ function derivedActivePlaye(gameTurns) {
   return currentPlayer;
 }
 
-function App() {
-  const [players, setPlayers] = useState({
-    X: "player1",
-    O: "player2",
-  });
-  const [gameTurns, setGameTurns] = useState([]);
-  let activePlayer = derivedActivePlaye(gameTurns);
-
-  ///
-  let gameBoard = [...initialGameBoard.map((row) => [...row])];
+function derivedGameBoard(gameTurns) {
+  let gameBoard = [...INITIAL_GAME_BOARD.map((row) => [...row])];
   for (const turn of gameTurns) {
     const { square, player } = turn;
     const { row, col } = square;
     gameBoard[row][col] = player;
   }
+  return gameBoard;
+}
+
+function derivedWinner(gameBoard, players) {
   let winner;
   for (const compination of WINNING_COMBINATIONS) {
     const firstSquareSymbole =
@@ -49,6 +49,15 @@ function App() {
       winner = players[firstSquareSymbole];
     }
   }
+  return winner;
+}
+function App() {
+  const [players, setPlayers] = useState(PLAYERS);
+  const [gameTurns, setGameTurns] = useState([]);
+  let activePlayer = derivedActivePlaye(gameTurns);
+
+  const gameBoard = derivedGameBoard(gameTurns);
+  const winner = derivedWinner(gameBoard, players);
 
   let isDraw = gameTurns.length === 9 && !winner;
 
@@ -80,13 +89,13 @@ function App() {
         {winner && <p>You win {winner}!</p>}
         <ol id="players" className="highlight-player">
           <Player
-            initialName="player 1"
+            initialName={PLAYERS.X}
             symbol="X"
             isActive={activePlayer === "X" && "active"}
             onChageName={handlePlayerNameChange}
           />
           <Player
-            initialName="player 2"
+            initialName={PLAYERS.O}
             symbol="O"
             isActive={activePlayer === "O" && "active"}
             onChageName={handlePlayerNameChange}
